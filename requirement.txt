@@ -1,0 +1,10 @@
+numpy
+opencv-python
+matplotlib
+PySpin
+scipy
+addict
+tqdm
+tensorboard
+onnx
+tensorrt
