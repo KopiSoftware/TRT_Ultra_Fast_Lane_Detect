@@ -36,13 +36,11 @@ def build_engine(onnx_file_path, mode, verbose=False):
                     print(parser.get_error(error))
                 return None
         if trt.__version__[0] >= '7':
-            # The actual yolo*.onnx is generated with batch size 64.
             # Reshape input to batch size 1
             shape = list(network.get_input(0).shape)
             shape[0] = 1
             network.get_input(0).shape = shape
 
-        print('Adding yolo_layer plugins...')
         model_name = onnx_file_path[:-5]
 
         print('Building an engine.  This would take a while...')
@@ -53,25 +51,28 @@ def build_engine(onnx_file_path, mode, verbose=False):
 
 
 def main():
-    """Create a TensorRT engine for ONNX-based YOLO."""
+    """Create a TensorRT engine for ONNX-based Model."""
     parser = argparse.ArgumentParser()
     parser.add_argument(
         '-v', '--verbose', action='store_true',
         help='enable verbose output (for debugging)')
     parser.add_argument(
-        '-m', '--model', type=str, default='model')
+        '-m', '--model', type=str, default='model.onnx')
     parser.add_argument(
         '-p', '--precision', type=str, default='fp16')
     args = parser.parse_args() 
 
     mode = args.precision
-    onnx_file_path = '%s.onnx' % args.model
+    onnx_file_path = args.model
     if not os.path.isfile(onnx_file_path):
         raise SystemExit('ERROR: file (%s) not found!' % onnx_file_path)
     if mode=='fp16':
-        engine_file_path = '%s_fp16.trt'% args.model
+        engine_file_path = '%s_fp16.trt'% args.model[:-5]
+    elif mode == 'fp32':
+        engine_file_path = '%s_fp32.trt'% args.model[:-5]
     else:
-        engine_file_path = '%s_fp32.trt'% args.model
+        print("illegal mode")
+        exit(0)
     engine = build_engine(onnx_file_path, mode,args.verbose)
     with open(engine_file_path, 'wb') as f:
         f.write(engine.serialize())

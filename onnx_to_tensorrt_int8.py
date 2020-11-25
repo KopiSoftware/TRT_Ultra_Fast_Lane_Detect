@@ -30,7 +30,6 @@ class EntropyCalibrator(trt.IInt8EntropyCalibrator2):
         trt.IInt8EntropyCalibrator2.__init__(self)
 
         self.cache_file = cache_file
-
         # Every time get_batch is called, the next batch of size batch_size will be copied to the device and returned.
         self.data = self.load_data(training_data)
         self.batch_size = batch_size
@@ -100,7 +99,6 @@ def build_int8_engine(onnx_file_path, calib, batch_size, verbose=False):
                     print(parser.get_error(error))
                 return None
         if trt.__version__[0] >= '7':
-            # The actual yolo*.onnx is generated with batch size 64.
             # Reshape input to batch size 1
             shape = list(network.get_input(0).shape)
             shape[0] = 1
@@ -123,18 +121,18 @@ def main():
         '-v', '--verbose', action='store_true',
         help='enable verbose output (for debugging)')
     parser.add_argument(
-        '-m', '--model', type=str, default='model',     # 修改这里即可,例如：res18_lane.pth->default='res18_lane'
+        '-m', '--model', type=str, default='model.onnx',
         )
     args = parser.parse_args() 
 
-    calibration_cache = "mnist_calibration.cache"  
+    calibration_cache = "calibration.cache"  
     data_path = 'calibration_data/testset/' 
     calib = EntropyCalibrator(data_path, cache_file=calibration_cache)    
 
-    onnx_file_path = '%s.onnx' % args.model
+    onnx_file_path = args.model
     if not os.path.isfile(onnx_file_path):
         raise SystemExit('ERROR: file (%s) not found!' % onnx_file_path)
-    engine_file_path = '%s_int8.trt' % args.model
+    engine_file_path = '%s_int8.trt' % args.model[:-5]
     engine =  build_int8_engine(onnx_file_path, calib, 16)
     with open(engine_file_path, 'wb') as f:
         f.write(engine.serialize())
