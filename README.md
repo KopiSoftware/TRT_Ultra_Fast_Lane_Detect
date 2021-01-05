@@ -77,4 +77,5 @@ Now, we have a trained pytorch model "model.pth".
 | Jetson TX1 |  8fps   |   8fps   |      8fps      |     16fps      |  Unsupported   |
 | Jetson nano A01(4GB) |  -- | -- |      --        |     8fps       |  Unsupported   |
 
-Where "--" denotes the experiment  haven't been completed yet.
+Where "--" denotes the experiment hasn't been completed yet.
+Anyone with untested equipment can send his results to the issues. The results will be adopted.
