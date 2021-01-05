@@ -5,7 +5,7 @@ TRT_Ultra_Fast_Lane_Detect is an implementation of converting Ultra fast lane de
 - The detection procedure is encapsulated.
 - The pytorch model is transformed into onnx model and trt model.
 - The trt models have different versions: FP32, FP16, INT8.
-- The Tusimple data set can be compressed by /calibration_data/make_mini_tusimple.py. There are redundancies in the Tusimple data set, for only the 20-th images are used. The compressed tusimple data set takes about 1GB.
+- The Tusimple data set can be compressed by /calibration_data/make_mini_tusimple.py. There are redundancies in the Tusimple data set, for only 20-th frames are used. The compressed tusimple data set takes about 1GB.
 
 The original project, model, and paper is available from https://github.com/cfzd/Ultra-Fast-Lane-Detection
 
@@ -74,6 +74,7 @@ Now, we have a trained pytorch model "model.pth".
 | :--------: | :-----: | :------: | :------------: | :------------: | :------------: |
 |  GTX1060   |  55fps  |  55fps   |     55fps      |  Unsupported   |     99fps      |
 | Xavier AGX |  27fps  |  27fps   |       --       |       --       |       --       |
-| Jetson T1  |  8fps   |   8fps   |      8fps      |     16fps      |  Unsupported   |
+| Jetson TX1 |  8fps   |   8fps   |      8fps      |     16fps      |  Unsupported   |
+| Jetson nano A01(4GB) |  -- | -- |      --        |     8fps       |  Unsupported   |
 
 Where "--" denotes the experiment  haven't been completed yet.
